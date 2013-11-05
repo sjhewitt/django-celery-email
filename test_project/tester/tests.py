@@ -55,3 +55,13 @@ class DjangoCeleryEmailTests(TestCase):
             self.assertEqual(result.get(), {'username': 'username', 'password': 'password'})
         # Restore backend
         djcelery_email.tasks.BACKEND = default_backend
+
+    def test_custom_backend(self):
+        message = mail.EmailMessage('test', 'Testing with Celery! w00t!!',
+                                    'from@example.com', ['to@example.com'])
+        result = send_email(message, backend='test_project.tester.tests.TestBackend',
+                            _backend_init_kwargs={
+                               'username': 'foo',
+                               'password': 'bar'
+                            })
+        self.assertEqual(result, {'username': 'foo', 'password': 'bar'})

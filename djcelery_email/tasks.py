@@ -17,7 +17,7 @@ TASK_CONFIG.update(CONFIG)
 @task(**TASK_CONFIG)
 def send_email(message, **kwargs):
     logger = send_email.get_logger()
-    conn = get_connection(backend=BACKEND,
+    conn = get_connection(backend=kwargs.get('backend', BACKEND),
                           **kwargs.pop('_backend_init_kwargs', {}))
     try:
         result = conn.send_messages([message])
